@@ -1,0 +1,71 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-qrcode-reader@2.0.3/dist/vue-qrcode-reader.css">
+  <style>
+
+  </style>
+</head>
+<body>
+<div id="app" style="text-align: center">
+    <h1 v-text="events"></h1>
+    <div v-if="result == null">
+      <qrcode-stream @decode="onDecode" @init="onInit" />
+      <p class="error">{{ error }}</p>
+    </div>
+    <div v-else>
+      <h1>参加者：{{ result }}</h1>
+      <p><button class="btn" @click="joinEvent" style="width: 80%; height: 20vh; font-size: 5rem;">参加を承認する</button></p>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-qrcode-reader@2.0.3/dist/vue-qrcode-reader.browser.js"></script>
+
+<script>
+  const QrcodeStream = window.VueQrcodeReader.QrcodeStream;
+  const QrcodeDropZone = window.VueQrcodeReader.QrcodeDropZone;
+  const QrcodeCapture = window.VueQrcodeReader.QrcodeCapture;
+
+new Vue({
+  el: '#app',
+  components: {
+    'qrcode-stream':QrcodeStream,
+    'qrcode-drop-zone':QrcodeDropZone,
+    'qrcode-capture':QrcodeCapture
+  },
+  data: {
+    events: 'イベント会場1',
+    result: null,
+    error: ''
+  },
+  methods: {
+    joinEvent: function() {
+      alert(`「${this.events}」で「${this.result}」を受け付けました`);
+      this.result = null;
+    },
+    onDecode (result) {
+      this.result = result
+    },
+    async onInit (promise) {
+      try {
+        await promise
+      } catch (error) {
+        if (error.name === 'NotAllowedError') {
+          this.error = "ERROR: you need to grant camera access permisson"
+        } else if (error.name === 'NotFoundError') {
+          this.error = "ERROR: no camera on this device"
+        } else if (error.name === 'NotSupportedError') {
+          this.error = "ERROR: secure context required (HTTPS, localhost)"
+        } else if (error.name === 'NotReadableError') {
+          this.error = "ERROR: is the camera already in use?"
+        } else if (error.name === 'OverconstrainedError') {
+          this.error = "ERROR: installed cameras are not suitable"
+        } else if (error.name === 'StreamApiNotSupportedError') {
+          this.error = "ERROR: Stream API is not supported in this browser"
+        }
+      }
+    }
+  }
+})
+</script>
+</body>
+</html>

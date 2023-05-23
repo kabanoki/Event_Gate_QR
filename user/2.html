@@ -1,0 +1,27 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-qrcode-reader@2.0.3/dist/vue-qrcode-reader.css">
+  <style>
+
+  </style>
+</head>
+<body>
+<div id="app">
+  <h1 v-text="text"></h1>
+  <qriously :value="text" :size="200" />
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-qriously@1.1.1/dist/vue-qriously.min.js"></script>
+
+
+<script>
+Vue.use(window['vue-qriously']);  
+new Vue({
+  el: '#app',
+  data: {
+    text:'testuser2'
+  }
+})
+</script>
+</body>
+</html>
